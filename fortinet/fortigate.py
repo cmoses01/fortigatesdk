@@ -1,11 +1,12 @@
-from fortigate_requests import FortigateRequests
+from fortinet.forti_requests import FortiRequests
 from urllib.parse import quote
 import requests
 
-class FortigateAPI(FortigateRequests):
+class Fortigate(FortiRequests):
     
-    def __init__(self):
+    def __init__(self, vdom="root"):
         super().__init__()
+        self.vdom = vdom
     
     def login(self):
 
@@ -30,23 +31,31 @@ class FortigateAPI(FortigateRequests):
     
     def get_addresses(self):
 
-        uri = '/api/v2/cmdb/firewall/address'
+        uri = f'/api/v2/cmdb/firewall/address'
+        if self.vdom != "root":
+            uri += f'?vdom={self.vdom}'
+        
+        resp = self._get_req(uri)
+
+        return resp.json()['results']
+    
+    def get_routing_table(self):
+
+        uri = f'/api/v2/monitor/router/ipv4'
+
+        if self.vdom != "root":
+            uri += f'?vdom={self.vdom}'
 
         resp = self._get_req(uri)
 
-
         return resp.json()['results']
+    
+    def get_ha_status(self):
 
-if __name__ == "__main__":
-    from getpass import getpass
-    fw = FortigateAPI()
-    fw.Username = ""
-    fw.Password = getpass()
-    fw.IP = ""
+        return True
+        
 
-    login = fw.login()
 
-    resp = fw.get_addresses()
 
 
 

@@ -1,9 +1,10 @@
 import requests
 import warnings
 
+
 warnings.filterwarnings("ignore")
 
-class FortigateRequests:
+class FortiRequests:
 
     def __init__(self, logging_format='%(message)s'):
         self.Username = ''
